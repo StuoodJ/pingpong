@@ -10,6 +10,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 #/ VARIABLES
+text_font = pygame.font.SysFont(None, 30)
 bW = 25
 bH = 75
 blx = 50
@@ -22,6 +23,8 @@ left = 0
 right = 1
 blocklscore = 0
 blockrscore = 0
+hitbottom = 0
+from text import drawtext as txt
 #/ GAME RUNNING
 while running:
     for event in pygame.event.get():
@@ -49,43 +52,52 @@ while running:
     #/BALL MOVEMENT
     if right == 1:
         if not ballpos.x >= brx:
-            ballpos.y += (100)*dt
+            if not hitbottom == 1:
+                ballpos.y += (100)*dt
+            else:
+                ballpos.y -= (100)*dt
             ballpos.x += 175*dt
         else:
             if bry+bH >= ballpos.y and bry <= ballpos.y:
                 right = 0
                 left = 1
             else:
-                ballpos.y += (random.randrange(-1, 1)*100)*dt
-                ballpos.x += 175*dt
+                ballpos = pygame.Vector2(dW/2,dH/2)
                 blocklscore += 1
     if left == 1:
         if not ballpos.x <= blx+bW:
-            ballpos.y += (random.randrange(-1, 1)*100)*dt
+            if not hitbottom == 1:
+                ballpos.y += (random.randrange(-1, 1)*100)*dt
+            else:
+                ballpos.y -= (100)*dt
             ballpos.x -= 175*dt
         else:
             if bly+bH >= ballpos.y and bly <= ballpos.y:
                 left = 0
                 right = 1
             else:
-                ballpos.y += (random.randrange(-1, 1)*100)*dt
-                ballpos.x -= 175*dt
+                ballpos = pygame.Vector2(dW/2,dH/2)
                 blockrscore += 1
     if ballpos.y >= dH:
+        hitbottom = 1
         ballpos.y -= 1000 * dt
         if left == 1:
             ballpos.x -= 175*dt
         elif right == 1:
             ballpos.x += 175*dt
+    elif ballpos.y <= dH/2:
+        hitbottom = 0
     if ballpos.y <= 0:
         ballpos.y += 1000 * dt
         if left == 1:
             ballpos.x -= 175*dt
         elif right == 1:
             ballpos.x += 175*dt
-    #/ RENDER RECTS
-    blocklrect = (blx, bly, bW, bH)
-    blockrrect = (brx, bry, bW, bH)
+    #/ RENDER
+    txt(screen, blocklscore, text_font, (255, 255, 255), blx-25, 25)
+    txt(screen, blockrscore, text_font, (255, 255, 255), brx+25, 25)
+    blocklrect = pygame.Rect(blx, bly, bW, bH)
+    blockrrect = pygame.Rect(brx, bry, bW, bH)
     ball = pygame.draw.circle(screen, (255,255,255), ballpos, ballr)
     blockl = pygame.draw.rect(screen, (255,255,255), blocklrect)
     blockr = pygame.draw.rect(screen, (255,255,255), blockrrect)
