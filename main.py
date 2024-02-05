@@ -94,8 +94,8 @@ while running:
         elif right == 1:
             ballpos.x += 175*dt
     #/ RENDER
-    txt(screen, blocklscore, text_font, (255, 255, 255), blx-25, 25)
-    txt(screen, blockrscore, text_font, (255, 255, 255), brx+25, 25)
+    txt(screen, str(blocklscore), text_font, (255, 255, 255), blx-25, 25)
+    txt(screen, str(blockrscore), text_font, (255, 255, 255), brx+25, 25)
     blocklrect = pygame.Rect(blx, bly, bW, bH)
     blockrrect = pygame.Rect(brx, bry, bW, bH)
     ball = pygame.draw.circle(screen, (255,255,255), ballpos, ballr)
